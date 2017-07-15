@@ -1,0 +1,8 @@
+c:\users\jerzy\documents\visual studio 2015\Projects\ColorBookCS\ColorBookCS\obj\Debug\ColorBookCS.Resource.resources
+c:\users\jerzy\documents\visual studio 2015\Projects\ColorBookCS\ColorBookCS\obj\Debug\ColorBookCS.csproj.GenerateResource.Cache
+c:\users\jerzy\documents\visual studio 2015\Projects\ColorBookCS\ColorBookCS\obj\Debug\ColorBookCS.csprojResolveAssemblyReference.cache
+C:\Users\Jerzy\Documents\Visual Studio 2015\Projects\ColorBookCS\ColorBookCS\bin\Debug\ColorBook.exe.config
+C:\Users\Jerzy\Documents\Visual Studio 2015\Projects\ColorBookCS\ColorBookCS\bin\Debug\ColorBook.exe
+C:\Users\Jerzy\Documents\Visual Studio 2015\Projects\ColorBookCS\ColorBookCS\bin\Debug\ColorBook.pdb
+C:\Users\Jerzy\Documents\Visual Studio 2015\Projects\ColorBookCS\ColorBookCS\obj\Debug\ColorBook.exe
+C:\Users\Jerzy\Documents\Visual Studio 2015\Projects\ColorBookCS\ColorBookCS\obj\Debug\ColorBook.pdb
