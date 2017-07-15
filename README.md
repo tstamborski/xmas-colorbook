@@ -1,2 +1,2 @@
 # xmas-colorbook
-Free computer colorbook in the christmas mood.
+Free computer coloring book in the christmas mood.
