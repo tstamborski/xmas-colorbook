@@ -86,6 +86,7 @@
     <None Include="rudolph.png" />
     <None Include="xmas-tree.png" />
     <None Include="guru_meditation.png" />
+    <None Include="snowman.png" />
     <Content Include="xmas_tree.ico" />
   </ItemGroup>
   <ItemGroup>

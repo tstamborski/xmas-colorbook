@@ -118,6 +118,10 @@ namespace ColorBookCS
         {
             base.OnMouseMove(e);
 
+            //if (e.X < 0 || e.X > Width ||
+                //e.Y < 0 || e.Y > Height)
+                //return;
+
             _oldmousex = _mousex;
             _oldmousey = _mousey;
 
@@ -147,6 +151,10 @@ namespace ColorBookCS
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
+
+            //if (e.X < 0 || e.X > Width ||
+                //e.Y < 0 || e.Y > Height)
+                //return;
 
             _mousex = e.X / _zoom;
             _mousey = e.Y / _zoom;
@@ -190,14 +198,23 @@ namespace ColorBookCS
             g += e.Delta / 16;
             b += e.Delta / 16;
 
-            if (r > 255 || r < 0 ||
-                g > 255 || g < 0 ||
-                b > 255 || b < 0)
-                return;
+            r = CheckoutByteRange(r);
+            g = CheckoutByteRange(g);
+            b = CheckoutByteRange(b);
 
             PencilColor = Color.FromArgb(r, g, b);
 
             ColorChanged?.Invoke();
+        }
+
+        private int CheckoutByteRange(int i)
+        {
+            if (i > 255)
+                return 255;
+            else if (i < 0)
+                return 0;
+            else
+                return i;
         }
 
         private Bitmap _brushbmp;

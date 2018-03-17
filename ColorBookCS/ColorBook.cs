@@ -31,9 +31,9 @@ namespace ColorBookCS
             aboutDialog = new AboutDialog();
             aboutDialog.AppIcon = Resource.ColorBookIcon;
             aboutDialog.AppName = "TS Xmas ColorBook";
-            aboutDialog.AppVersion = "ver. 0.8 (beta1)";
+            aboutDialog.AppVersion = "ver. 0.9 (beta2)";
             aboutDialog.AppCopyright = "Copyright (c) 2017 by Tobiasz Stamborski";
-            aboutDialog.AppDescription = "Free computer colorbook in the christmas mood!";
+            aboutDialog.AppDescription = "Free computer ColorBook in the christmas mood!";
             aboutDialog.Licence = license;
 
             colorDialog = new ColorDialog();
@@ -167,8 +167,28 @@ namespace ColorBookCS
             slateGrayButton = new ColorBarButton(new ColorIcon(Color.SlateGray), new EventHandler(colorBarButton_Click));
             brownButton = new ColorBarButton(new ColorIcon(Color.Brown), new EventHandler(colorBarButton_Click));
             blackButton = new ColorBarButton(new ColorIcon(Color.Black), new EventHandler(colorBarButton_Click));
+            customColorButton = new ToolStripButton(Resource.CustomColorIcon.ToBitmap());
+            customColorButton.Click += customColorMenuItem_Click;
             rubberButton = new ToolStripButton(Resource.RubberIcon.ToBitmap());
             rubberButton.Click += RubberButton_Click;
+            pencilSizeLabel = new ToolStripLabel("pencil size:");
+            pencilSmallButton = new ToolStripButton("Small");
+            pencilSmallButton.CheckOnClick = true;
+            pencilSmallButton.Click += new EventHandler(pencilSizeButton_Clicked);
+            pencilSmallButton.Font = new Font(pencilSmallButton.Font, FontStyle.Bold);
+            pencilMediumButton = new ToolStripButton("Medium");
+            pencilMediumButton.CheckOnClick = true;
+            pencilMediumButton.Checked = true;
+            pencilMediumButton.Click += new EventHandler(pencilSizeButton_Clicked);
+            pencilMediumButton.Font = new Font(pencilSmallButton.Font, FontStyle.Bold);
+            pencilBigButton = new ToolStripButton("Big");
+            pencilBigButton.CheckOnClick = true;
+            pencilBigButton.Click += new EventHandler(pencilSizeButton_Clicked);
+            pencilBigButton.Font = new Font(pencilSmallButton.Font, FontStyle.Bold);
+            pencilLargeButton = new ToolStripButton("Large");
+            pencilLargeButton.CheckOnClick = true;
+            pencilLargeButton.Click += new EventHandler(pencilSizeButton_Clicked);
+            pencilLargeButton.Font = new Font(pencilSmallButton.Font, FontStyle.Bold);
             toolBar.Items.Add(yellowButton);
             toolBar.Items.Add(orangeButton);
             toolBar.Items.Add(pinkButton);
@@ -182,18 +202,27 @@ namespace ColorBookCS
             toolBar.Items.Add(brownButton);
             toolBar.Items.Add(blackButton);
             toolBar.Items.Add("-");
+            toolBar.Items.Add(customColorButton);
+            toolBar.Items.Add("-");
             toolBar.Items.Add(rubberButton);
-            
+            toolBar.Items.Add("-");
+            toolBar.Items.Add(pencilSizeLabel);
+            toolBar.Items.Add(pencilSmallButton);
+            toolBar.Items.Add(pencilMediumButton);
+            toolBar.Items.Add(pencilBigButton);
+            toolBar.Items.Add(pencilLargeButton);
+
             area = new PagesArea();
-            page = new Page[7];
+            page = new Page[8];
             page[0] = new Page(Resource.Page1, "Santa with bag");
             page[1] = new Page(Resource.Page2, "Santa smiling");
-            page[2] = new ColorBookCS.Page(Resource.Page3, "Birth of Christ");
+            page[2] = new Page(Resource.Page3, "Birth of Christ");
             page[3] = new Page(Resource.Page4, "Gifts");
             page[4] = new Page(Resource.Page5, "Rudolph reindeer");
             page[5] = new Page(Resource.Page6, "Christmas tree");
-            page[6] = new Page(Resource.Page7, "Guru meditation");
-            for (int i = 0; i < 7; i++)
+            page[6] = new Page(Resource.Page7, "Snowman");
+            page[7] = new Page(Resource.Page8, "Guru meditation");
+            for (int i = 0; i < 8; i++)
             {
                 page[i].MouseMove += ColorBook_MouseMove;
                 page[i].ColorChanged += ColorBook_ColorChanged;
@@ -348,13 +377,96 @@ namespace ColorBookCS
             }
 
             if (item == smallPencilMenuItem)
-                currentPencilWidth = 4;
+            {
+                currentPencilWidth = SMALL_WIDTH;
+
+                pencilSmallButton.Checked = true;
+                pencilMediumButton.Checked = false;
+                pencilBigButton.Checked = false;
+                pencilLargeButton.Checked = false;
+            }
             else if (item == mediumPencilMenuItem)
-                currentPencilWidth = 8;
+            {
+                currentPencilWidth = MEDIUM_WIDTH;
+
+                pencilSmallButton.Checked = false;
+                pencilMediumButton.Checked = true;
+                pencilBigButton.Checked = false;
+                pencilLargeButton.Checked = false;
+            }
             else if (item == bigPencilMenuItem)
-                currentPencilWidth = 16;
+            {
+                currentPencilWidth = BIG_WIDTH;
+
+                pencilSmallButton.Checked = false;
+                pencilMediumButton.Checked = false;
+                pencilBigButton.Checked = true;
+                pencilLargeButton.Checked = false;
+            }
             else if (item == largePencilMenuItem)
-                currentPencilWidth = 32;
+            {
+                currentPencilWidth = LARGE_WIDTH;
+
+                pencilSmallButton.Checked = false;
+                pencilMediumButton.Checked = false;
+                pencilBigButton.Checked = false;
+                pencilLargeButton.Checked = true;
+            }
+
+            area.ActualPage.PencilWidth = currentPencilWidth;
+        }
+        private void pencilSizeButton_Clicked(object sender, EventArgs e)
+        {
+            ToolStripButton btn = sender as ToolStripButton;
+
+            if (btn.Checked == false)
+                btn.Checked = true;
+
+            if (btn != pencilSmallButton)
+                pencilSmallButton.Checked = false;
+            if (btn != pencilMediumButton)
+                pencilMediumButton.Checked = false;
+            if (btn != pencilBigButton)
+                pencilBigButton.Checked = false;
+            if (btn != pencilLargeButton)
+                pencilLargeButton.Checked = false;
+
+            if (btn == pencilSmallButton)
+            {
+                smallPencilMenuItem.Checked = true;
+                mediumPencilMenuItem.Checked = false;
+                bigPencilMenuItem.Checked = false;
+                largePencilMenuItem.Checked = false;
+
+                currentPencilWidth = SMALL_WIDTH;
+            }
+            if (btn == pencilMediumButton)
+            {
+                smallPencilMenuItem.Checked = false;
+                mediumPencilMenuItem.Checked = true;
+                bigPencilMenuItem.Checked = false;
+                largePencilMenuItem.Checked = false;
+
+                currentPencilWidth = MEDIUM_WIDTH;
+            }
+            if (btn == pencilBigButton)
+            {
+                smallPencilMenuItem.Checked = false;
+                mediumPencilMenuItem.Checked = false;
+                bigPencilMenuItem.Checked = true;
+                largePencilMenuItem.Checked = false;
+
+                currentPencilWidth = BIG_WIDTH;
+            }
+            if (btn == pencilLargeButton)
+            {
+                smallPencilMenuItem.Checked = false;
+                mediumPencilMenuItem.Checked = false;
+                bigPencilMenuItem.Checked = false;
+                largePencilMenuItem.Checked = true;
+
+                currentPencilWidth = LARGE_WIDTH;
+            }
 
             area.ActualPage.PencilWidth = currentPencilWidth;
         }
@@ -412,7 +524,9 @@ namespace ColorBookCS
         ToolStrip toolBar;
         ColorBarButton yellowButton, pinkButton, redButton, blueButton, darkGreenButton, lightGrayButton,
             brownButton, blackButton, orangeButton, skyBlueButton, yellowGreenButton, slateGrayButton;
-        ToolStripButton rubberButton;
+        ToolStripButton rubberButton, customColorButton;
+        ToolStripLabel pencilSizeLabel;
+        ToolStripButton pencilSmallButton, pencilMediumButton, pencilBigButton, pencilLargeButton;
         StatusBar statusBar;
         StatusBarPanel colorPanel, pagePanel, coordPanel;
 
@@ -422,6 +536,10 @@ namespace ColorBookCS
         AboutDialog aboutDialog;
         ColorDialog colorDialog;
 
+        const int SMALL_WIDTH = 4;
+        const int MEDIUM_WIDTH = 8;
+        const int BIG_WIDTH = 16;
+        const int LARGE_WIDTH = 32;
         String license = "The MIT License (MIT)\r\nCopyright (c) 2017 Tobiasz Stamborski\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the\r\nSoftware without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies of the Software,\r\nand to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\r\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR\r\nANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH\r\nTHE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.";
     }
 }
