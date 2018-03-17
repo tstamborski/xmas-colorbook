@@ -20,9 +20,11 @@ Features which you might don't know:
 * Right mouse button is pipette tool - you can use it for
   grabbing some previously used color from image.
 * Mouse scroll has got different function here. You can
-  darker or lighter by it currently used color.
+  use it to lighter or darker currently used color.
 
 List of usefull keyboard shortcuts:
+* __CTRL + C__ will open window with full pallette.
+* __CTRL + R__ is shortcut for rubber.
 * You can flip pages of coloring book by pressing
   __CTRL + Left Arrow__ or __CTRL + Right Arrow__.
 * If you want to save your work, you can export current
