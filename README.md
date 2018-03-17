@@ -9,7 +9,7 @@ mastering programming and C#. I think that is enough
 good and interesting to place it here on GitHub.
 
 For better description of same app you should see
-realises (Go to 'Code' tab and look somewhere between
+releases (Go to 'Code' tab and look somewhere between
 project tags and list of source code files). I want to
 wormly encourage anybody to download and try it - please
 do not make me sad because of 0 downloads counter.
