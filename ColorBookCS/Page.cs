@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
 
 namespace ColorBookCS
 {
@@ -74,7 +75,15 @@ namespace ColorBookCS
             }
         }
 
-        public bool Save(String filepath)
+        public void Reset()
+        {
+            Graphics g = Graphics.FromImage(_canvas);
+            g.Clear(Color.White);
+
+            Refresh();
+        }
+
+        public bool Save(String filepath, ImageFormat format)
         {
             Bitmap bmp = new Bitmap(_bmp.Width, _bmp.Height);
             Graphics g = Graphics.FromImage(bmp);
@@ -84,12 +93,50 @@ namespace ColorBookCS
 
             try
             {
-                bmp.Save(filepath);
+                bmp.Save(filepath, format);
             }
-            catch (AccessViolationException)
+            catch (Exception)
             {
                 MessageBox.Show(null, "Error! Cannot save to file.", "Error!",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool LoadData(String filepath)
+        {
+            Bitmap bmp;
+
+            try
+            {
+                bmp = (Bitmap)Bitmap.FromFile(filepath);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (bmp.Width == _canvas.Width && bmp.Height == _canvas.Height)
+            {
+                 _canvas.Dispose();
+                 _canvas = new Bitmap(bmp);
+            }
+            else
+                 return false;
+
+            return true;
+        }
+
+        public bool SaveData(String filepath)
+        {
+            try
+            {
+                _canvas.Save(filepath, ImageFormat.Png);
+            }
+            catch (Exception)
+            {
                 return false;
             }
 

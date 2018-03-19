@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ColorBookCS
 {
@@ -31,7 +33,7 @@ namespace ColorBookCS
             aboutDialog = new AboutDialog();
             aboutDialog.AppIcon = Resource.ColorBookIcon;
             aboutDialog.AppName = "TS Xmas ColorBook";
-            aboutDialog.AppVersion = "ver. 0.9 (beta2)";
+            aboutDialog.AppVersion = "ver. 1.1";
             aboutDialog.AppCopyright = "Copyright (c) 2017 by Tobiasz Stamborski";
             aboutDialog.AppDescription = "Free computer ColorBook in the christmas mood!";
             aboutDialog.Licence = license;
@@ -149,6 +151,9 @@ namespace ColorBookCS
                 null, new EventHandler(zoomMenu_Click));
             zoom400MenuItem = (ToolStripMenuItem)zoomMenu.DropDownItems.Add("&400%",
                 null, new EventHandler(zoomMenu_Click));
+            optionsMenu.DropDownItems.Add("-");
+            resetMenuItem = (ToolStripMenuItem)optionsMenu.DropDownItems.Add("&Reset all pages ", Resource.ResetIcon.ToBitmap(),
+                new EventHandler(resetMenuItem_Click));
 
             helpMenu = (ToolStripMenuItem)menuBar.Items.Add("&Help");
             aboutMenuItem = (ToolStripMenuItem)helpMenu.DropDownItems.Add("&About... ", Resource.ColorBookIcon.ToBitmap(),
@@ -168,8 +173,10 @@ namespace ColorBookCS
             brownButton = new ColorBarButton(new ColorIcon(Color.Brown), new EventHandler(colorBarButton_Click));
             blackButton = new ColorBarButton(new ColorIcon(Color.Black), new EventHandler(colorBarButton_Click));
             customColorButton = new ToolStripButton(Resource.CustomColorIcon.ToBitmap());
+            customColorButton.ToolTipText = "Pallette";
             customColorButton.Click += customColorMenuItem_Click;
             rubberButton = new ToolStripButton(Resource.RubberIcon.ToBitmap());
+            rubberButton.ToolTipText = "Rubber";
             rubberButton.Click += RubberButton_Click;
             pencilSizeLabel = new ToolStripLabel("pencil size:");
             pencilSmallButton = new ToolStripButton("Small");
@@ -255,6 +262,22 @@ namespace ColorBookCS
             Controls.Add(toolBar);
             Controls.Add(menuBar);
             Controls.Add(statusBar);
+
+            LoadAppData();
+        }
+
+        private void resetMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("This action will clean all pages and delete your work.\r\n" +
+                "Do you really want continue?", "Are you sure?", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
+                == DialogResult.Cancel)
+                return;
+            if (MessageBox.Show("Do you really want to do it?", "Caution!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+                == DialogResult.No)
+                return;
+
+            for (int i = 0; i < page.Length; i++)
+                page[i].Reset();
         }
 
         private void ColorBook_ColorChanged()
@@ -286,6 +309,8 @@ namespace ColorBookCS
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.No)
                 e.Cancel = true;
+
+            SaveAppData();
         }
 
         private void nextPageMenuItem_Click(object sender, EventArgs e)
@@ -322,12 +347,19 @@ namespace ColorBookCS
             dlg.OverwritePrompt = true;
             dlg.Title = "Save As... ";
             dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            dlg.Filter = "Bitmap file (*.bmp)|*.bmp";
+            dlg.Filter = "Bitmap file (*.bmp)|*.bmp|Jpeg image (*.jpg)|*.jpg|Png image (*.png)|*.png";
             dlg.DefaultExt = "Bitmap file (*.bmp)|*.bmp";
             dlg.AddExtension = true;
 
             if (dlg.ShowDialog() == DialogResult.OK)
-                area.ActualPage.Save(dlg.FileName);
+            {
+                if(dlg.FilterIndex == 1)
+                    area.ActualPage.Save(dlg.FileName, ImageFormat.Bmp);
+                else if (dlg.FilterIndex == 2)
+                    area.ActualPage.Save(dlg.FileName, ImageFormat.Jpeg);
+                else if (dlg.FilterIndex == 3)
+                    area.ActualPage.Save(dlg.FileName, ImageFormat.Png);
+            }
         }
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
@@ -492,7 +524,6 @@ namespace ColorBookCS
 
             area.ActualPage.Zoom = currentZoom;
         }
-
         private void colorBarButton_Click(object sender, EventArgs e)
         {
             ColorBarButton item = sender as ColorBarButton;
@@ -501,6 +532,31 @@ namespace ColorBookCS
             colorPanel.Icon = currentColorIcon.Icon;
 
             area.ActualPage.PencilColor = currentColorIcon.Color;
+        }
+
+        private void LoadAppData()
+        {
+            String app_dir_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                APP_DIR_NAME);
+
+            if (!Directory.Exists(app_dir_path))
+                return;
+
+            for (int i = 0; i < page.Length; i++)
+                if (File.Exists(Path.Combine(app_dir_path, "img" + i.ToString() + ".dat")))
+                    page[i].LoadData(Path.Combine(app_dir_path, "img" + i.ToString() + ".dat"));
+        }
+
+        private void SaveAppData()
+        {
+            String app_dir_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                APP_DIR_NAME);
+
+            if (!Directory.Exists(app_dir_path))
+                Directory.CreateDirectory(app_dir_path);
+
+            for (int i = 0; i < page.Length; i++)
+                page[i].SaveData(Path.Combine(app_dir_path, "img" + i.ToString() + ".dat"));
         }
 
         ColorIcon customColorIcon, currentColorIcon;
@@ -517,7 +573,7 @@ namespace ColorBookCS
             darkGreenMenuItem, seledineMenuItem;
         ColorMenuItem lightGrayMenuItem, slateGrayMenuItem, blackMenuItem, goldMenuItem, brownMenuItem;
         ToolStripMenuItem customColorMenuItem, rubberMenuItem;
-        ToolStripMenuItem pencilSizeMenu, zoomMenu;
+        ToolStripMenuItem pencilSizeMenu, zoomMenu, resetMenuItem;
         ToolStripMenuItem smallPencilMenuItem, mediumPencilMenuItem, bigPencilMenuItem, largePencilMenuItem;
         ToolStripMenuItem zoom50MenuItem, zoom100MenuItem, zoom200MenuItem, zoom400MenuItem;
         ToolStripMenuItem aboutMenuItem;
@@ -536,6 +592,7 @@ namespace ColorBookCS
         AboutDialog aboutDialog;
         ColorDialog colorDialog;
 
+        const String APP_DIR_NAME = "TSXmasColorbook";
         const int SMALL_WIDTH = 4;
         const int MEDIUM_WIDTH = 8;
         const int BIG_WIDTH = 16;
