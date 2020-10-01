@@ -29,7 +29,7 @@ List of usefull keyboard shortcuts:
 * If you want to save your work, you can export current
   page to bmp file by pressing __CTRL + S__.
 * You can quickly change the size of pencil from
-  keyboard by pressing keys __F5 - F8__.
+  keyboard by pressing keys __F5__ - __F8__.
 
 ## Screenshots
 
