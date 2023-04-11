@@ -2,6 +2,12 @@
 
 ## Description
 
+*Psst! If you are somewhat interested by this program -
+checkout also [this application](https://github.com/tstamborski/happy-coloring-book) -
+it's almost newer or better version of this one here except
+it's java and it's working with custom downloaded images instead
+of builded-in set.*
+
 Free computer coloring book in the christmas mood.
 
 This application is one of my steps in learning and
